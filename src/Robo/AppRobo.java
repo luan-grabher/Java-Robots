@@ -4,10 +4,10 @@ import Auxiliar.Parametros;
 import Auxiliar.Valor;
 import Entity.Executavel;
 import Executor.Execution;
-import Executor.View.View;
+import SimpleView.View;
+import fileManager.FileManager;
 import java.io.File;
 import java.util.List;
-import main.Arquivo;
 
 public class AppRobo {
 
@@ -15,13 +15,13 @@ public class AppRobo {
     private File arquivoParametros = new File("//localhost/Robos/Tarefas/parametros.cfg").getAbsoluteFile();
     private File localRetorno = new File("//localhost/Robos/Retornos de Tarefas/").getAbsoluteFile();
     private Parametros parametros;
-    private Execution execução;
+    private Execution execution;
 
     public AppRobo(String nome) {
         this.nome = nome;
 
-        execução = new Execution("Executando robô " + this.nome, 1);
-        execução.setMostrarMensagens(false);
+        execution = new Execution("Executando robô " + this.nome);
+        execution.setShowMessages(false);
     }
 
     public void setNome(String nome) {
@@ -57,17 +57,17 @@ public class AppRobo {
             if (idTarefa.getInteger() > 0) {
                 retornoFuncao = retornoFuncao.equals("") ? getRetornoPadrao() : retornoFuncao;
                 retornoFuncao = retornoFuncao.replaceAll("\n", "<br>");
-                if (!Arquivo.salvar(localRetorno.getAbsolutePath() + "/" + idTarefa.getString() + ".html", titulo + "§" + retornoFuncao)) {
+                if (!FileManager.save(localRetorno.getAbsolutePath() + "/" + idTarefa.getString() + ".html", titulo + "§" + retornoFuncao)) {
                     System.out.println("Ocorreu um erro ao salvar retorno da tarefa!");
                 }
             } else {
                 String[] options = new String[]{"PrintLn", "Arquivo no Desktop"};
-                int option = View.chooseOption("Teste", "Você está testando o robô escolha como quer visualizar o retorno:", options);
+                int option = View.chooseButton("Você está testando o robô, escolha como quer visualizar o retorno:", options);
                 if (option == 0) {
                     System.out.println(titulo + "\n\n" + retornoFuncao.replaceAll("<br>", "\n"));
                 } else {
                     File desktop = new File(System.getProperty("user.home") + "/Desktop");
-                    Arquivo.salvar(desktop.getAbsolutePath() + "/test robo.html", titulo + "<br><br>" + retornoFuncao);
+                    FileManager.save(desktop.getAbsolutePath() + "/test robo.html", titulo + "<br><br>" + retornoFuncao);
                 }
             }
         } catch (Exception e) {
@@ -78,7 +78,7 @@ public class AppRobo {
             e.printStackTrace();
         } finally {
             //Finaliza JFRAME
-            execução.finalizar();
+            execution.endExecution();
         }
 
         //Garante fechamento Robô
@@ -99,10 +99,10 @@ public class AppRobo {
 
     public static String rodarExecutaveis(String nomeApp, List<Executavel> executaveis) {
         Execution execucao = new Execution(nomeApp);
-        execucao.setExecutaveis(executaveis);
-        execucao.setMostrarMensagens(false);
-        execucao.rodarExecutaveis();
-        execucao.finalizar();
+        execucao.setExecutables(executaveis);
+        execucao.setShowMessages(false);
+        execucao.runExecutables();
+        execucao.endExecution(false);
         return execucao.getRetorno();
     }
 }
