@@ -8,6 +8,7 @@ import SimpleView.View;
 import fileManager.FileManager;
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public class AppRobo {
 
@@ -100,6 +101,15 @@ public class AppRobo {
     public static String rodarExecutaveis(String nomeApp, List<Executavel> executaveis) {
         Execution execucao = new Execution(nomeApp);
         execucao.setExecutables(executaveis);
+        execucao.setShowMessages(false);
+        execucao.runExecutables();
+        execucao.endExecution(false);
+        return execucao.getRetorno();
+    }
+    
+    public static String rodarExecutaveis(String nomeApp, Map<String, Executavel> executaveis) {
+        Execution execucao = new Execution(nomeApp);
+        execucao.setExecutionMap(executaveis);
         execucao.setShowMessages(false);
         execucao.runExecutables();
         execucao.endExecution(false);
