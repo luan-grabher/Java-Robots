@@ -1,9 +1,8 @@
 package Robo;
 
-import Auxiliar.Parametros;
-import Auxiliar.Valor;
 import Entity.Executavel;
 import Executor.Execution;
+import Robo.Model.Parameters;
 import SimpleView.View;
 import fileManager.FileManager;
 import java.io.File;
@@ -15,7 +14,8 @@ public class AppRobo {
     private String nome;
     private File arquivoParametros = new File("//localhost/Robos/Tarefas/parametros.cfg").getAbsoluteFile();
     private File localRetorno = new File("//localhost/Robos/Retornos de Tarefas/").getAbsoluteFile();
-    private Parametros parametros;
+
+    public Parameters parametros = null;
     private Execution execution;
 
     public AppRobo(String nome) {
@@ -31,14 +31,14 @@ public class AppRobo {
 
     public void definirParametros() {
         try {
-            parametros = new Parametros(arquivoParametros);
+            Parameters parametros = new Parameters(arquivoParametros);
         } catch (Exception e) {
-            parametros = new Parametros("");
+            Parameters parametros = new Parameters("");
         }
     }
 
     public void definirParametros(String textoParametros) {
-        parametros = new Parametros(textoParametros);
+        parametros = new Parameters(textoParametros);
     }
 
     public String getRetornoPadrao() {
@@ -54,11 +54,11 @@ public class AppRobo {
             String titulo = "Retorno da tarefa " + nome;
 
             //Verifica se possui Id
-            Valor idTarefa = parametros.get("idTarefa");
-            if (idTarefa.getInteger() > 0) {
+            Integer idTarefa = Integer.parseInt(parametros.values.getOrDefault("idTarefa", "0"));
+            if (idTarefa > 0) {
                 retornoFuncao = retornoFuncao.equals("") ? getRetornoPadrao() : retornoFuncao;
                 retornoFuncao = retornoFuncao.replaceAll("\n", "<br>");
-                if (!FileManager.save(localRetorno.getAbsolutePath() + "/" + idTarefa.getString() + ".html", titulo + "§" + retornoFuncao)) {
+                if (!FileManager.save(localRetorno.getAbsolutePath() + "/" + idTarefa + ".html", titulo + "§" + retornoFuncao)) {
                     System.out.println("Ocorreu um erro ao salvar retorno da tarefa!");
                 }
             } else {
@@ -86,8 +86,8 @@ public class AppRobo {
         System.exit(0);
     }
 
-    public Valor getParametro(String nomeParametro) {
-        return parametros.get(nomeParametro);
+    public String getParametro(String nomeParametro) {
+        return parametros.values.get(nomeParametro);
     }
 
     public void setArquivoParametros(File arquivoParametros) {
@@ -106,7 +106,7 @@ public class AppRobo {
         execucao.endExecution(false);
         return execucao.getRetorno();
     }
-    
+
     public static String rodarExecutaveis(String nomeApp, Map<String, Executavel> executaveis) {
         Execution execucao = new Execution(nomeApp);
         execucao.setExecutionMap(executaveis);
