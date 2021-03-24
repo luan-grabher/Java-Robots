@@ -86,7 +86,9 @@ public class AppRobo {
         System.exit(0);
     }
 
-    public String getParametro(String nomeParametro) {
+    public String getParametro(String nomeParametro) throws Exception {
+        if(parametros == null) throw new Exception("A variavel de parametros ficou em branco");
+        if(parametros.values == null) throw new Exception("A variavel de parametros.value ficou em branco");
         return parametros.values.get(nomeParametro);
     }
 
