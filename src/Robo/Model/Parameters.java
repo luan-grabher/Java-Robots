@@ -67,7 +67,7 @@ public class Parameters {
 
                     //Verifica se há apenas o nome e valor
                     if (parametroSplit.length == 2) {
-                        values.put(parametroSplit[1], parametroSplit[0]);
+                        values.put(parametroSplit[0], parametroSplit[1]);
                     }
                 }
             }
