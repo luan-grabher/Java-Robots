@@ -29,11 +29,12 @@ public class AppRobo {
         this.nome = nome;
     }
 
-    public void definirParametros() {
+    public void definirParametros() throws Exception {
         try {
-            Parameters parametros = new Parameters(arquivoParametros);
+            parametros = new Parameters(arquivoParametros);
         } catch (Exception e) {
-            Parameters parametros = new Parameters("");
+            parametros = new Parameters("");
+            throw new Exception(e);            
         }
     }
 
