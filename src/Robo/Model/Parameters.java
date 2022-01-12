@@ -36,6 +36,10 @@ public class Parameters {
     public Parameters(File arquivoParametros) {
         this.arquivoParametros = arquivoParametros;
         String textoArquivoParametros = FileManager.getText(this.arquivoParametros.getAbsolutePath());
+
+        //Print text on file
+        System.out.println("Texto do arquivo de parametros: " + textoArquivoParametros);
+
         FileManager.save(this.arquivoParametros.getAbsolutePath(), "usado");
 
         definir(textoArquivoParametros);

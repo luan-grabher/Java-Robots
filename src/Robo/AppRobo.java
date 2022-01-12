@@ -9,17 +9,28 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.ini4j.Ini;
+
 public class AppRobo {
 
     private String nome;
-    private File arquivoParametros = new File("//localhost/Robos/Tarefas/parametros.cfg").getAbsoluteFile();
-    private File localRetorno = new File("//localhost/Robos/Retornos de Tarefas/").getAbsoluteFile();
+    private File arquivoParametros = null;
+    private File localRetorno = null;
 
     public Parameters parametros = null;
     private Execution execution;
 
     public AppRobo(String nome) {
         this.nome = nome;
+
+        //Try to read appRobo.ini and get path.parameterfile and path.returnfolder
+        try{
+            Ini ini = new Ini(new File("appRobo.ini"));
+            this.arquivoParametros = new File(ini.get("path", "parameterfile")).getAbsoluteFile();
+            this.localRetorno = new File(ini.get("path", "returnfolder")).getAbsoluteFile();
+        }catch(Exception e){
+           System.out.println("Erro ao ler arquivo de configuração ini");
+        }
 
         execution = new Execution("Executando robô " + this.nome);
         execution.setShowMessages(false);
@@ -32,6 +43,8 @@ public class AppRobo {
     public void definirParametros() throws Exception {
         try {
             parametros = new Parameters(arquivoParametros);
+            //print parametros
+            System.out.println("Parametros definidos: " + parametros.values);
         } catch (Exception e) {
             parametros = new Parameters("");
             throw new Exception(e);            
