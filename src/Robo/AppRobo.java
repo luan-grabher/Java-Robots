@@ -82,6 +82,8 @@ public class AppRobo {
                     System.out.println(titulo + "\n\n" + retornoFuncao.replaceAll("<br>", "\n"));
                 } else {
                     File desktop = new File(System.getProperty("user.home") + "/Desktop");
+                    //replace all \n with <br>
+                    retornoFuncao = retornoFuncao.replaceAll("\n", "<br>");
                     FileManager.save(desktop.getAbsolutePath() + "/test robo.html", titulo + "<br><br>" + retornoFuncao);
                 }
             }
